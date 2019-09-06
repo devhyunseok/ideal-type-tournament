@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true // 엄격한 유형 검사 활성화
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
