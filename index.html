@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>이상형 월드컵</title>
-  <link rel="stylesheet" type="text/css" href="dist/css/main.css">
+  <link rel="stylesheet" type="text/css" href="public/css/main.css">
 </head>
 <body>
-  <button id="btn-left-img">
-    <img class="battle-img" id="left-img" src=""/>
-  </button>
-  <span> VS </span>
-  <button id="btn-right-img">
-    <img class="battle-img" id="right-img" src=""/>
-  </button>
-  <ul>
-    <li><button id="item_1">1</button></li>
-    <li><button id="item_2">1</button></li>
-    <li><button id="item_3">1</button></li>
+  <div>
+    <span id="current-round"></span>
+    <span>강</span>
+  </div>
+  <div>
+    <button id="btn-left-img">
+      <img class="battle-img" id="left-img" src=""/>
+    </button>
+    <span> VS </span>
+    <button id="btn-right-img">
+      <img class="battle-img" id="right-img" src=""/>
+    </button>
+  </div>
+  <ul id="history-list">
+    <li></li>
+    <li></li>
+    <li></li>
   </ul>
   <script src="dist/bundle.js"></script>
 </body>
