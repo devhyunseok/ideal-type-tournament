@@ -6,23 +6,36 @@
   <link rel="stylesheet" type="text/css" href="public/css/main.css">
 </head>
 <body>
-  <div>
-    <span id="current-round"></span>
-    <span>강</span>
+  <div id="game-start-page">
+    <button id="game-start">게임 시작</button>
   </div>
-  <div>
-    <button id="btn-left-img">
-      <img class="battle-img" id="left-img" src=""/>
-    </button>
-    <span> VS </span>
-    <button id="btn-right-img">
-      <img class="battle-img" id="right-img" src=""/>
-    </button>
+  <div id="game-board">
+    <header>
+      <h2>
+        <span id="current-round"></span>강
+      </h2>
+      <button id="btn-back">이전</button>
+    </header>
+    <div class="content">
+      <div class="versus">
+        <button id="btn-left-img">
+          <img class="battle-img" id="left-img" src=""/>
+        </button>
+        <span> VS </span>
+        <button id="btn-right-img">
+          <img class="battle-img" id="right-img" src=""/>
+        </button>
+      </div>
+      <div class="versus-result">
+        <img class="result-img" src=""/>
+        <button class="btn-restart">다시 하기</button>
+      </div>
+    </div>
+    <div id="history-wrapper">
+      <h4> 토너먼트 기록 </h4>
+      <ul id="history-list"></ul>
+    </div>
   </div>
-  <div>
-    <button id="btn-back">이전</button>
-  </div>
-  <ul id="history-list"></ul>
   <script src="dist/bundle.js"></script>
 </body>
 </html>

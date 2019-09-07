@@ -1,19 +1,19 @@
-import Comic from "./Comic";
+import Character from "./Character";
 
 class Stage {
-  private readonly left: Comic;
-  private readonly right: Comic;
+  private readonly left: Character;
+  private readonly right: Character;
 
-  constructor(left: Comic, right: Comic) {
+  constructor(left: Character, right: Character) {
     this.left = left;
     this.right = right;
   }
 
-  getLeft(): Comic {
+  getLeft(): Character {
     return this.left;
   }
 
-  getRight(): Comic {
+  getRight(): Character {
     return this.right;
   }
 }

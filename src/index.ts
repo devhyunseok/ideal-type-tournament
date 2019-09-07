@@ -1,7 +1,10 @@
-import Comic, { comicList } from './model/Comic';
+import Character, { CharacterList } from './model/Character';
 import { shuffleList } from "./utils/utils";
 import Stage from "./model/Stage";
 
+const btnGameStartEl = <HTMLButtonElement>document.getElementById("game-start");
+const gameStartPageEl = <HTMLDivElement>document.getElementById("game-start-page");
+const gameBoardEl = <HTMLDivElement>document.getElementById("game-board");
 const leftImage = <HTMLImageElement>document.getElementById("left-img");
 const rightImage = <HTMLImageElement>document.getElementById("right-img");
 const btnLeft = <HTMLButtonElement>document.getElementById("btn-left-img");
@@ -10,27 +13,37 @@ const curRound = <HTMLSpanElement>document.getElementById("current-round");
 const historyListEl = <HTMLUListElement>document.getElementById("history-list");
 const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
 
+const btnRestartEl = <HTMLButtonElement>document.getElementsByClassName("btn-restart")[0];
+
 let roundCount = 0; // 현재 라운드
 let history: Array<Stage[]> = [];
 let round : Array<Stage> = [];
 
 const main = () => {
   // TODO: 나중에 해제 해야함.
+  // 게임 시작 버튼
+  btnGameStartEl.addEventListener('click', onGameStart);
+  // 왼쪽 선택 버튼
   btnLeft.addEventListener('click', leftImageClick);
+  // 오른쪽 선택 버튼
   btnRight.addEventListener('click', rightImageClick);
-  
   // 뒤로가기
   btnBackEl.addEventListener('click', cancelClick);
+};
 
-  //const shuffle = shuffleList(comicList);
+/**
+ * 게임 시작
+ */
+const onGameStart = () => {
+  initNewRound(CharacterList);
 
-  initNewRound(comicList);
-  
   console.log(round);
-  console.log(comicList);
-  // console.log(shuffle);
-  
+  console.log(CharacterList);
+
   nowBattle(round[roundCount]);
+
+  gameStartPageEl.style.display = 'none';
+  gameBoardEl.style.display = 'block';
 };
 
 // 취소 버튼
@@ -68,15 +81,17 @@ const cancelClick = () => {
     // 현재 라운드 재 표기
     curRound.textContent = String(round.length * 2);
 
+    // TODO: 히스토리 수정
+
     nowBattle(round[roundCount]);
   }
 }
 
-
-
-
-// 새로운 라운드를 생성
-const initNewRound = (list: Comic[]) => {
+/**
+ * 새로운 라운드를 생성
+ * @param list 
+ */
+const initNewRound = (list: Character[]) => {
   round = []; // 초기화
   roundCount = 0;
   const shuffledList = shuffleList(list);
@@ -89,56 +104,92 @@ const initNewRound = (list: Comic[]) => {
   curRound.textContent = String(round.length * 2);
 
   // li 추가
-  const liEl = document.createElement("li");
-  shuffledList.forEach(item => liEl.appendChild(document.createTextNode(`${item.getName()}, `)))
-  historyListEl.appendChild(liEl);
+  addHistoryItemView(shuffledList);
 };
 
+const addHistoryItemView = (list: Character[]) => {
+  const liEl = document.createElement("li");
+  liEl.className = 'history-row';
+
+  list.forEach((item: Character) => {
+    const imageEl = document.createElement('img');
+    imageEl.className = 'history-img'
+    imageEl.src = item.getImagePath();
+
+    const spanEl = document.createElement('span');
+    spanEl.className = 'history-name'
+    spanEl.textContent = item.getName();
+
+    const divEl = document.createElement("div");
+    divEl.className = 'history-item'
+    divEl.appendChild(imageEl);
+    divEl.appendChild(spanEl);
+
+    liEl.appendChild(divEl);
+  });
+
+  historyListEl.prepend(liEl);
+}
+
+/**
+ * 왼쪽 이미지 선택
+ */
 const leftImageClick = () => {
   round[roundCount].getLeft().selected = true;
   roundCount++;
 
+  selectImage();
+};
+
+// 이미지 선택
+const selectImage = () => {
   if(roundCount >= round.length) {
-    const selectedRound = round.map(item => {
+    const selectedCharacter = round.map((item: Stage) => {
       if(item.getLeft().getSelected()) {
-        item.getLeft().selected = false
+        item.getLeft().selected = false;
         return item.getLeft();
       }
       item.getRight().selected = false;
       return item.getRight();
     });
 
-    console.log(selectedRound);
     history.push(round);
-    initNewRound(selectedRound);
+
+    if(selectedCharacter.length === 1) {
+      addHistoryItemView(selectedCharacter);
+      endOfGame(selectedCharacter[0]);
+      return;
+    }
+
+    initNewRound(selectedCharacter);
   }
 
   nowBattle(round[roundCount]);
-};
+}
 
+/**
+ * 최종 선택
+ */
+const endOfGame = (character: Character) => {
+  const versusWrapperEl = <HTMLDivElement>document.getElementsByClassName("versus")[0];
+  const versusResultWrapperEl = <HTMLDivElement>document.getElementsByClassName("versus-result")[0];
+  const resultImageEl = <HTMLImageElement>document.getElementsByClassName("result-img")[0];
+
+  versusWrapperEl.style.display = 'none';
+  versusResultWrapperEl.style.display = 'block';
+  resultImageEl.src = character.getImagePath();
+}
+
+
+// 오른쪽 이미지 선택
 const rightImageClick = () => {
   round[roundCount].getRight().selected = true;
   roundCount++;
 
-  if(roundCount >= round.length) {
-    console.log('bb');
-    const selectedRound = round.map(item => {
-      if(item.getLeft().getSelected()) {
-        item.getLeft().selected = false
-        return item.getLeft();
-      }
-      item.getRight().selected = false;
-      return item.getRight();
-    });
-
-    console.log(selectedRound);
-    history.push(round);
-    initNewRound(selectedRound);
-  }
-
-  nowBattle(round[roundCount]);
+  selectImage();
 };
 
+// 현재 스테이지 표시
 const nowBattle = (curRound: Stage) => {
   leftImage.src = curRound.getLeft() && curRound.getLeft().getImagePath();
   rightImage.src = curRound.getRight() && curRound.getRight().getImagePath();

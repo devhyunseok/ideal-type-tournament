@@ -1,4 +1,118 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  border: 1px solid #828282;
+  color: #212529;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#game-start-page {
+
+}
+
+/* 게임 컨텐츠 화면 */
+#game-board {
+  display: none;
+}
+
+#game-board > header {
+  display: flex;
+  padding: 15px;
+}
+
+#game-board > header > button {
+  width: 50px;
+  margin-left: auto;
+}
+
+/* 캐릭터 vs 컨테이너 화면 */
+.content {
+  justify-content: center;
+  display: flex;
+  min-width: 670px;
+}
+
+.versus {
+  display: flex;
+  align-items: center;
+}
+
+.versus > span {
+  margin: 0 15px;
+}
+
+.versus-result {
+  display: none;
+}
+
+.versus-result > img {
+  display: block;
+  width: 320px;
+  height: 320px;
+}
+
 .battle-img {
-    width: 100px;
-    height: 100px;
+  width: 300px;
+  height: 300px;
+}
+
+.btn-restart {
+  width: 320px;
+  margin-top: 15px;
+}
+
+#history-wrapper {
+  min-width: 1100px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+
+#history-wrapper > h4 {
+  padding: 15px;
+}
+
+#history-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+}
+
+.history-row {
+  display: flex;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  align-items: center;
+  margin: 10px;
+}
+
+.history-img {
+  width: 50px;
+  height: 50px;
+}
+
+.history-name {
+  
 }
