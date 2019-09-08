@@ -3,14 +3,9 @@ import { shuffleList } from "./utils/utils";
 import Stage from "./model/Stage";
 
 const btnGameStartEl = <HTMLButtonElement>document.getElementById("game-start");
-const gameStartPageEl = <HTMLDivElement>document.getElementById("game-start-page");
-const gameBoardEl = <HTMLDivElement>document.getElementById("game-board");
-const leftImage = <HTMLImageElement>document.getElementById("left-img");
-const rightImage = <HTMLImageElement>document.getElementById("right-img");
 const btnLeft = <HTMLButtonElement>document.getElementById("btn-left-img");
 const btnRight = <HTMLButtonElement>document.getElementById("btn-right-img");
-const historyListEl = <HTMLUListElement>document.getElementById("history-list");
-
+const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
 const btnRestartEl = <HTMLButtonElement>document.getElementsByClassName("btn-restart")[0];
 const btnFirstEl = <HTMLButtonElement>document.getElementById("btn-first");
 
@@ -19,26 +14,27 @@ let history: Array<Stage[]> = [];
 let round : Array<Stage> = [];
 
 const initialize = () => {
-  // TODO: 나중에 해제 해야함.
   // 게임 시작 버튼
   btnGameStartEl.addEventListener('click', onGameStart);
-  // 왼쪽 선택 버튼
-  btnLeft.addEventListener('click', leftImageClick);
-  // 오른쪽 선택 버튼
-  btnRight.addEventListener('click', rightImageClick);
-  // 뒤로가기
-  const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
-  btnBackEl.addEventListener('click', cancelClick);
-  // 게임 재 시작 버튼
-  btnRestartEl.addEventListener('click', onGameRestart);
-  // 처음으로 이동 버튼
-  btnFirstEl.addEventListener('click', onGameRestart);
 };
 
 /**
 * 게임 시작
 */
 const onGameStart = () => {
+   // 게임 시작 버튼 리스너 제거
+  btnGameStartEl.removeEventListener('click', onGameStart);
+  // 왼쪽 선택 버튼 리스너 등록
+  btnLeft.addEventListener('click', leftImageClick);
+  // 오른쪽 선택 버튼 리스너 등록
+  btnRight.addEventListener('click', rightImageClick);
+  // 뒤로가기 리스너 등록
+  btnBackEl.addEventListener('click', cancelClick);
+  // 게임 재 시작 버튼 리스너 등록
+  btnRestartEl.addEventListener('click', onGameRestart);
+  // 처음으로 이동 버튼 리스너 등록
+  btnFirstEl.addEventListener('click', onGameRestart);
+
   var selectEl = <HTMLSelectElement>document.getElementsByClassName("game-select-round")[0];
   var selectedRound = Number(selectEl.options[selectEl.selectedIndex].value);
   const shuffledList = shuffleList(CharacterList);
@@ -51,7 +47,9 @@ const onGameStart = () => {
   initNewRound(selectedList);
   nowBattle(round[roundCount]);
   
+  const gameStartPageEl = <HTMLDivElement>document.getElementById("game-start-page");
   gameStartPageEl.style.display = 'none';
+  const gameBoardEl = <HTMLDivElement>document.getElementById("game-board");
   gameBoardEl.style.display = 'block';
 };
 
@@ -66,20 +64,32 @@ const onGameRestart = () => {
   history = [];
   round = [];
   
-  while (historyListEl.firstChild){
+  // 이전 히스토리 삭제
+  const historyListEl = <HTMLUListElement>document.getElementById("history-list");
+  while(historyListEl.firstChild) {
     historyListEl.removeChild(historyListEl.firstChild);
   }
+
   versusWrapperEl.style.display = 'block';
   versusResultWrapperEl.style.display = 'none';
   
+  const gameStartPageEl = <HTMLDivElement>document.getElementById("game-start-page");
   gameStartPageEl.style.display = 'flex';
+  const gameBoardEl = <HTMLDivElement>document.getElementById("game-board");
   gameBoardEl.style.display = 'none';
-}
 
-// 뒤로가기 버튼 enable/disable
-const setEnableBtnBack = (isEnable: boolean) => {
-  const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
-  btnBackEl.disabled = !isEnable;
+  // 게임 시작 버튼 리스너 등록
+  btnGameStartEl.addEventListener('click', onGameStart);
+  // 왼쪽 선택 버튼 리스너 제거
+  btnLeft.removeEventListener('click', leftImageClick);
+  // 오른쪽 선택 버튼 리스너 제거
+  btnRight.removeEventListener('click', rightImageClick);
+  // 뒤로가기 리스너 제거
+  btnBackEl.removeEventListener('click', cancelClick);
+  // 게임 재 시작 버튼 리스너 제거
+  btnRestartEl.removeEventListener('click', onGameRestart);
+  // 처음으로 이동 버튼 리스너 제거
+  btnFirstEl.removeEventListener('click', onGameRestart);
 }
 
 /**
@@ -101,9 +111,7 @@ const cancelClick = () => {
   // 히스토리 이전 내용을 가져옴
   if(roundCount <= 0 && history.length > 0) {
     const prevRound = history.pop();
-    
-    console.log(prevRound);
-    
+
     round = prevRound && prevRound.length > 0 ? prevRound : [];
     roundCount = round.length - 1;
     
@@ -115,6 +123,7 @@ const cancelClick = () => {
     showCurrentRound(`${round.length * 2}강`);
     
     // 이전 히스토리 삭제.
+    const historyListEl = <HTMLUListElement>document.getElementById("history-list");
     if(historyListEl.firstChild) {
       historyListEl.removeChild(historyListEl.firstChild);
     }
@@ -122,6 +131,7 @@ const cancelClick = () => {
     nowBattle(round[roundCount]);
   }
 }
+
 
 /**
 * 새로운 라운드를 생성
@@ -133,7 +143,6 @@ const initNewRound = (list: Character[]) => {
   const shuffledList = shuffleList(list);
   
   for (let i = 0; i < shuffledList.length; i+=2) {
-    console.log(i);
     round.push(new Stage(shuffledList[i], shuffledList[i+1]))
   }
   
@@ -170,6 +179,7 @@ const addHistoryItemView = (list: Character[]) => {
     liEl.appendChild(divEl);
   });
   
+  const historyListEl = <HTMLUListElement>document.getElementById("history-list");
   historyListEl.prepend(liEl);
 }
 
@@ -188,9 +198,9 @@ const leftImageClick = () => {
  */
 const checkUsableBackButton = () => {
   if(roundCount < 1 && history.length < 1) {
-    setEnableBtnBack(false);
+    btnBackEl.disabled = true;
   }else {
-    setEnableBtnBack(true);
+    btnBackEl.disabled = false;
   }
 }
 
@@ -227,7 +237,7 @@ const selectImage = () => {
 */
 const endOfGame = (character: Character) => {
   showCurrentRound('최종');
-  setEnableBtnBack(false);
+  btnBackEl.disabled = true;
 
   const versusWrapperEl = <HTMLDivElement>document.getElementsByClassName("versus")[0];
   const versusResultWrapperEl = <HTMLDivElement>document.getElementsByClassName("versus-result")[0];
@@ -237,7 +247,6 @@ const endOfGame = (character: Character) => {
   versusResultWrapperEl.style.display = 'block';
   resultImageEl.src = character.getImagePath();
 }
-
 
 /**
 * 오른쪽 이미지 선택
@@ -256,10 +265,11 @@ const rightImageClick = () => {
 const nowBattle = (nowStage: Stage) => {
   checkUsableBackButton();
 
+  const leftImage = <HTMLImageElement>document.getElementById("left-img");
+  const rightImage = <HTMLImageElement>document.getElementById("right-img");
+
   leftImage.src = nowStage.getLeft() && nowStage.getLeft().getImagePath();
   rightImage.src = nowStage.getRight() && nowStage.getRight().getImagePath();
-  console.log(roundCount);
-  console.log(round);
 };
 
 initialize();
