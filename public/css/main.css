@@ -22,6 +22,12 @@ button {
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+button:disabled {
+  color: white;
+  background: #828282;
+  cursor: not-allowed;
+}
+
 #game-start-page {
   display: flex;
   flex-direction: column;

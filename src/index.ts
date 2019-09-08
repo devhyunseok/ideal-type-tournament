@@ -9,9 +9,8 @@ const leftImage = <HTMLImageElement>document.getElementById("left-img");
 const rightImage = <HTMLImageElement>document.getElementById("right-img");
 const btnLeft = <HTMLButtonElement>document.getElementById("btn-left-img");
 const btnRight = <HTMLButtonElement>document.getElementById("btn-right-img");
-const curRound = <HTMLSpanElement>document.getElementById("current-round");
 const historyListEl = <HTMLUListElement>document.getElementById("history-list");
-const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
+
 const btnRestartEl = <HTMLButtonElement>document.getElementsByClassName("btn-restart")[0];
 const btnFirstEl = <HTMLButtonElement>document.getElementById("btn-first");
 
@@ -19,7 +18,7 @@ let roundCount = 0; // 현재 라운드
 let history: Array<Stage[]> = [];
 let round : Array<Stage> = [];
 
-const main = () => {
+const initialize = () => {
   // TODO: 나중에 해제 해야함.
   // 게임 시작 버튼
   btnGameStartEl.addEventListener('click', onGameStart);
@@ -28,6 +27,7 @@ const main = () => {
   // 오른쪽 선택 버튼
   btnRight.addEventListener('click', rightImageClick);
   // 뒤로가기
+  const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
   btnBackEl.addEventListener('click', cancelClick);
   // 게임 재 시작 버튼
   btnRestartEl.addEventListener('click', onGameRestart);
@@ -71,13 +71,16 @@ const onGameRestart = () => {
   gameBoardEl.style.display = 'none';
 }
 
-// 취소 버튼
+// 뒤로가기 버튼 enable/disable
+const setEnableBtnBack = (isEnable: boolean) => {
+  const btnBackEl = <HTMLButtonElement>document.getElementById("btn-back");
+  btnBackEl.disabled = !isEnable;
+}
+
+/**
+* 취소 버튼
+*/
 const cancelClick = () => {
-  // 취소할 내역이 없음.
-  if(roundCount <= 0 && history.length <= 0) {
-    return; 
-  }
-  
   // 현재 라운드에서 하나라도 선택되었을 경우.
   if(roundCount > 0) {
     roundCount--;
@@ -104,10 +107,13 @@ const cancelClick = () => {
     round[roundCount].getRight().selected = false;
     
     // 현재 라운드 재 표기
-    curRound.textContent = String(round.length * 2);
+    showCurrentRound(`${round.length * 2}강`);
     
-    // TODO: 히스토리 수정
-    
+    // 이전 히스토리 삭제.
+    if(historyListEl.firstChild) {
+      historyListEl.removeChild(historyListEl.firstChild);
+    }
+   
     nowBattle(round[roundCount]);
   }
 }
@@ -126,11 +132,17 @@ const initNewRound = (list: Character[]) => {
     round.push(new Stage(shuffledList[i], shuffledList[i+1]))
   }
   
-  curRound.textContent = String(round.length * 2);
+  showCurrentRound(`${round.length * 2}강`);
   
   // li 추가
   addHistoryItemView(shuffledList);
 };
+
+// 화면에 현재 라운드 표시
+const showCurrentRound = (text: string) => {
+  const curRoundEl = <HTMLSpanElement>document.getElementById("current-round");
+  curRoundEl.textContent = text;
+}
 
 const addHistoryItemView = (list: Character[]) => {
   const liEl = document.createElement("li");
@@ -166,7 +178,20 @@ const leftImageClick = () => {
   selectImage();
 };
 
-// 이미지 선택
+/**
+ * 뒤로가기 버튼 사용 가능 여부 체크
+ */
+const checkUsableBackButton = () => {
+  if(roundCount < 1 && history.length < 1) {
+    setEnableBtnBack(false);
+  }else {
+    setEnableBtnBack(true);
+  }
+}
+
+/**
+* 이미지 선택
+*/
 const selectImage = () => {
   if(roundCount >= round.length) {
     const selectedCharacter = round.map((item: Stage) => {
@@ -196,6 +221,9 @@ const selectImage = () => {
 * 최종 선택
 */
 const endOfGame = (character: Character) => {
+  showCurrentRound('최종');
+  setEnableBtnBack(false);
+
   const versusWrapperEl = <HTMLDivElement>document.getElementsByClassName("versus")[0];
   const versusResultWrapperEl = <HTMLDivElement>document.getElementsByClassName("versus-result")[0];
   const resultImageEl = <HTMLImageElement>document.getElementsByClassName("result-img")[0];
@@ -206,7 +234,9 @@ const endOfGame = (character: Character) => {
 }
 
 
-// 오른쪽 이미지 선택
+/**
+* 오른쪽 이미지 선택
+*/ 
 const rightImageClick = () => {
   round[roundCount].getRight().selected = true;
   roundCount++;
@@ -214,12 +244,17 @@ const rightImageClick = () => {
   selectImage();
 };
 
-// 현재 스테이지 표시
-const nowBattle = (curRound: Stage) => {
-  leftImage.src = curRound.getLeft() && curRound.getLeft().getImagePath();
-  rightImage.src = curRound.getRight() && curRound.getRight().getImagePath();
+/**
+* 현재 스테이지 표시
+* @param nowStage 
+*/
+const nowBattle = (nowStage: Stage) => {
+  checkUsableBackButton();
+
+  leftImage.src = nowStage.getLeft() && nowStage.getLeft().getImagePath();
+  rightImage.src = nowStage.getRight() && nowStage.getRight().getImagePath();
   console.log(roundCount);
   console.log(round);
 };
 
-main();
+initialize();
