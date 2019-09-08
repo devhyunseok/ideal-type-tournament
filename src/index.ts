@@ -39,11 +39,16 @@ const initialize = () => {
 * 게임 시작
 */
 const onGameStart = () => {
-  initNewRound(CharacterList);
-  
-  console.log(round);
-  console.log(CharacterList);
-  
+  var selectEl = <HTMLSelectElement>document.getElementsByClassName("game-select-round")[0];
+  var selectedRound = Number(selectEl.options[selectEl.selectedIndex].value);
+  const shuffledList = shuffleList(CharacterList);
+  const selectedList = shuffledList.filter((item: Character, index: number) => {
+    if(index < selectedRound) {
+        return item;
+    }
+  })
+
+  initNewRound(selectedList);
   nowBattle(round[roundCount]);
   
   gameStartPageEl.style.display = 'none';
