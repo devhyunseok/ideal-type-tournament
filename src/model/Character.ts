@@ -27,22 +27,22 @@ class Character {
 }
 
 export const CharacterList = [
-  new Character('아구몬', 'public/images/Agumon.png'),
-  new Character('보노보노', 'public/images/Bonobono.jpeg'),
-  new Character('쵸파', 'public/images/Chyopa.jpeg'),
-  new Character('둘리', 'public/images/Dooly.jpg'),
-  new Character('도라에몽', 'public/images/Doraemon.jpg'),
-  new Character('토토로', 'public/images/Totoro.jpeg'),
-  new Character('에비츄', 'public/images/Evichu.jpg'),
-  new Character('미니언즈', 'public/images/Minions.jpg'),
-  new Character('핑구', 'public/images/Pinggu.jpg'),
-  new Character('피카츄', 'public/images/Pikachu.png'),
-  new Character('포로리', 'public/images/Porori.jpg'),
-  new Character('푸까', 'public/images/Pucca.jpg'),
-  new Character('오버액션토끼', 'public/images/Overaction_Rabbit.jpg'),
-  new Character('쿠테타마', 'public/images/Kutetama.png'),
-  new Character('소닉', 'public/images/Sonic.jpeg'),
-  new Character('스펀지밥', 'public/images/Spongebob.png')
+  new Character('아구몬', 'public/characters/Agumon.png'),
+  new Character('보노보노', 'public/characters/Bonobono.jpeg'),
+  new Character('쵸파', 'public/characters/Chyopa.jpeg'),
+  new Character('둘리', 'public/characters/Dooly.jpg'),
+  new Character('도라에몽', 'public/characters/Doraemon.jpg'),
+  new Character('토토로', 'public/characters/Totoro.jpeg'),
+  new Character('에비츄', 'public/characters/Evichu.jpg'),
+  new Character('미니언즈', 'public/characters/Minions.jpg'),
+  new Character('핑구', 'public/characters/Pinggu.jpg'),
+  new Character('피카츄', 'public/characters/Pikachu.png'),
+  new Character('포로리', 'public/characters/Porori.jpg'),
+  new Character('푸까', 'public/characters/Pucca.jpg'),
+  new Character('오버액션토끼', 'public/characters/Overaction_Rabbit.jpg'),
+  new Character('쿠테타마', 'public/characters/Kutetama.png'),
+  new Character('소닉', 'public/characters/Sonic.jpeg'),
+  new Character('스펀지밥', 'public/characters/Spongebob.png')
 ];
 
 export default Character;
